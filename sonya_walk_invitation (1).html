@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Прогулка?</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0c0f;--panel:#15171c;--muted:#9298a4;--line:#292d36;--accent:#d8e0ea}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#202630 0,#0b0c0f 55%);color:#f4f6f8;font:16px/1.45 Inter,system-ui,-apple-system,Segoe UI,sans-serif;display:grid;place-items:center;padding:22px}
+main{width:min(100%,560px)}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;color:var(--muted);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+.progress{height:3px;background:#252932;border-radius:10px;overflow:hidden;margin-bottom:22px}.bar{height:100%;width:25%;background:#e7edf5;transition:width .3s}
+.panel{background:rgba(21,23,28,.94);border:1px solid var(--line);border-radius:22px;padding:clamp(22px,6vw,38px);box-shadow:0 24px 80px #0007}
+.step{display:none}.step.active{display:block;animation:up .28s ease}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h1{font-size:clamp(30px,7vw,46px);line-height:1.05;letter-spacing:-.045em;margin:0 0 12px}
+p{color:var(--muted);margin:0 0 26px}
+.buttons{display:flex;gap:12px;align-items:center;flex-wrap:wrap;min-height:54px}
+button,.choice{border:1px solid var(--line);background:#22262e;color:#f5f7fa;border-radius:12px;padding:14px 20px;font:inherit;font-weight:650;cursor:pointer;transition:.18s}
+button:hover,.choice:hover{background:#303641;transform:translateY(-1px)}
+.primary{background:#eef2f6;color:#11151b;border-color:#eef2f6}.primary:hover{background:#d8e0ea}
+#noBtn{position:relative}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0 24px}
+.choice{min-height:76px;text-align:left;display:flex;align-items:center;gap:12px;background:#1b1e25}
+.choice .emoji{font-size:23px}.choice.selected{border-color:#e7edf5;background:#2b323d;box-shadow:inset 0 0 0 1px #e7edf5}
+label{display:block;font-size:13px;color:#c3c9d2;margin:18px 0 8px}
+input{width:100%;padding:14px 15px;border:1px solid var(--line);border-radius:11px;background:#0f1116;color:white;font:inherit;outline:none}
+input:focus{border-color:#aeb9c8}
+.actions{display:flex;justify-content:space-between;gap:12px;margin-top:26px}
+.actions button{flex:1}
+.small{font-size:12px;color:#858d9a;margin-top:16px}
+.summary{background:#101217;border:1px solid var(--line);padding:16px;border-radius:13px;margin:18px 0;color:#dce1e8}
+.summary div{margin:7px 0}.summary span{color:var(--muted)}
+@media(max-width:420px){.grid{grid-template-columns:1fr}.panel{border-radius:18px}}
+</style>
+</head>
+<body>
+<main>
+ <div class="top"><span>ПЛАНЫ НА ПРОГУЛКУ</span><span id="stepLabel">01 / 04</span></div>
+ <div class="progress"><div class="bar" id="bar"></div></div>
+ <form id="inviteForm" action="https://formsubmit.co/palasrod@mail.ru" method="POST">
+  <input type="hidden" name="_subject" value="Соня ответила на приглашение погулять">
+  <input type="hidden" name="_template" value="table">
+  <input type="hidden" name="_captcha" value="false">
+  <input type="hidden" name="_next" value="">
+  <input type="hidden" name="Ответ" value="Да, хочу погулять">
+  <section class="panel">
+   <div class="step active" data-step="0">
+    <h1>Соня, хочешь погулять со мной?</h1>
+    <p>Выбирай «Да» — дальше определимся с планами.</p>
+    <div class="buttons">
+     <button class="primary" type="button" id="yesBtn">Да</button>
+     <button type="button" id="noBtn">Нет</button>
+    </div>
+   </div>
+   <div class="step" data-step="1">
+    <h1>Куда пойдём?</h1><p>Выбери вариант или предложи свой.</p>
+    <div class="grid" id="places">
+     <button class="choice" type="button" data-place="Коньки"><span class="emoji">⛸️</span>Коньки</button>
+     <button class="choice" type="button" data-place="Кофе с котами"><span class="emoji">☕</span>Кофе с котами</button>
+     <button class="choice" type="button" data-place="ВДНХ"><span class="emoji">🌳</span>ВДНХ</button>
+     <button class="choice" type="button" data-place="Парк Горького"><span class="emoji">🌿</span>Парк Горького</button>
+    </div>
+    <label for="customPlace">Или своё место</label><input id="customPlace" name="Своё место" placeholder="Напиши название или адрес">
+    <input type="hidden" name="Место" id="placeValue" required>
+    <div class="actions"><button type="button" class="back">Назад</button><button type="button" class="primary next" id="placeNext">Далее</button></div>
+   </div>
+   <div class="step" data-step="2">
+    <h1>Когда тебе удобно?</h1><p>Укажи дату и время, которые тебе подходят.</p>
+    <label for="date">Дата</label><input type="date" id="date" name="Дата" required>
+    <label for="time">Время</label><input type="time" id="time" name="Время" required>
+    <div class="actions"><button type="button" class="back">Назад</button><button type="button" class="primary next" id="timeNext">Далее</button></div>
+   </div>
+   <div class="step" data-step="3">
+    <h1>Всё верно?</h1><p>Проверь выбранные планы и отправь ответ.</p>
+    <div class="summary" id="summary"></div>
+    <label for="note">Комментарий (необязательно)</label><input id="note" name="Комментарий" placeholder="Например, могу немного позже">
+    <div class="actions"><button type="button" class="back">Назад</button><button type="submit" class="primary">Отправить</button></div>
+    <div class="small">После отправки данные придут на указанную почту.</div>
+   </div>
+  </section>
+ </form>
+</main>
+<script>
+const steps=[...document.querySelectorAll('.step')],bar=document.getElementById('bar'),label=document.getElementById('stepLabel');
+let current=0,chosen='';
+function show(n){current=n;steps.forEach((s,i)=>s.classList.toggle('active',i===n));bar.style.width=((n+1)*25)+'%';label.textContent='0'+(n+1)+' / 04';}
+document.getElementById('yesBtn').addEventListener('click',()=>show(1));
+const no=document.getElementById('noBtn');
+function dodge(){const parent=no.parentElement, area=parent.getBoundingClientRect(), b=no.getBoundingClientRect();no.style.position='fixed';no.style.left=Math.max(8,Math.random()*(innerWidth-b.width-16))+'px';no.style.top=Math.max(8,Math.random()*(innerHeight-b.height-16))+'px';}
+no.addEventListener('pointerenter',dodge);no.addEventListener('click',dodge);no.addEventListener('touchstart',e=>{e.preventDefault();dodge()},{passive:false});
+document.querySelectorAll('[data-place]').forEach(btn=>btn.addEventListener('click',()=>{chosen=btn.dataset.place;document.querySelectorAll('[data-place]').forEach(x=>x.classList.toggle('selected',x===btn));document.getElementById('customPlace').value='';document.getElementById('placeValue').value=chosen;}));
+document.getElementById('customPlace').addEventListener('input',e=>{chosen=e.target.value.trim();document.querySelectorAll('[data-place]').forEach(x=>x.classList.remove('selected'));document.getElementById('placeValue').value=chosen;});
+document.getElementById('placeNext').addEventListener('click',()=>{if(!chosen){alert('Сначала выбери место или напиши своё.');return;}show(2);});
+document.getElementById('timeNext').addEventListener('click',()=>{const d=document.getElementById('date'),t=document.getElementById('time');if(!d.value||!t.value){alert('Укажи дату и время.');return;}if(d.value<new Date().toISOString().slice(0,10)){alert('Выбери сегодняшнюю или будущую дату.');return;}document.getElementById('summary').innerHTML='<div><span>Место:</span> '+escapeHtml(chosen)+'</div><div><span>Дата:</span> '+escapeHtml(d.value)+'</div><div><span>Время:</span> '+escapeHtml(t.value)+'</div>';show(3);});
+document.querySelectorAll('.back').forEach(b=>b.addEventListener('click',()=>show(current-1)));
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+document.getElementById('inviteForm').addEventListener('submit',e=>{if(!chosen||!document.getElementById('date').value||!document.getElementById('time').value){e.preventDefault();alert('Заполни все обязательные поля.');}});
+</script>
+</body>
+</html>
